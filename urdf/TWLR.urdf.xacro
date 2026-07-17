@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="TWLR">
+
+  <!-- Materials (shared across all assemblies) -->
+  <material name="material">
+    <color rgba="0.627 0.627 0.627 1.0"/>
+  </material>
+
+  <!-- Assembly includes -->
+  <xacro:include filename="$(find TWLR_description)/urdf/assemblies/TWLR.urdf.xacro"/>
+
+  <!-- Instantiate assemblies -->
+  <xacro:TWLR prefix=""/>
+
+</robot>

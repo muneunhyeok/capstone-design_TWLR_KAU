@@ -1,0 +1,21 @@
+# Joint configuration for joint_state_publisher_gui
+
+joint_state_publisher:
+  ros__parameters:
+    # Joint names and default positions
+    zeros:
+      hip_left: 0.0
+      hip_right: 0.0
+      knee_left: 0.0
+      knee_right: 0.0
+      wheel_left: 0.0
+      wheel_right: 0.0
+
+    # Joints to publish
+    source_list:
+      - hip_left
+      - hip_right
+      - knee_left
+      - knee_right
+      - wheel_left
+      - wheel_right
