@@ -6,7 +6,7 @@
 
 | | 내용 | 진입점 |
 |---|---|---|
-| **기구 설계 (CAD)** | Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
+| **기구 설계 (CAD)** | CATIA, Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
 | **ROS 2 description** | URDF/xacro, 메시, RViz·robot_state_publisher 런치 | [`urdf/`](urdf/) · 아래 섹션 |
 
 ## 기구 설계 요약 → [`hardware/README.md`](hardware/README.md)
