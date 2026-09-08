@@ -6,6 +6,9 @@ Fusion 360 문서: **`TWLR_assembly_AK45`** — 컴포넌트 31, 오컬런스 55
 
 ![TWLR assembly](images/assembly_iso.png)
 
+▶ **어셈블리 애니메이션**: [`media/assembly-animation.mp4`](media/assembly-animation.mp4) (27 s)
+· 발표자료: [2026-2학기 1주차](../docs/presentations/2026-2-week1/)
+
 | | |
 |---|---|
 | 총질량 | **11.19 kg** (PLA 벽 6줄 / 인필 20 % 기준) |
@@ -136,6 +139,7 @@ hardware/
 │   ├── as-designed/  *.stl          설계 그대로 (구멍 포함)
 │   └── README.md                    슬라이서 설정
 ├── analysis/         재현 가능한 파이썬 해석 스크립트 + 결과
+├── media/            어셈블리 애니메이션
 └── images/
 ```
 

@@ -20,10 +20,15 @@
 | 휠 | **WA172E** 인휠모터 Ø172 × 2 (4-M6 PCD36 체결) |
 | 다리 | 좌우 **4절 링크**, 가동범위 Δθ = −27.1° … +36.1° |
 
+**어셈블리 애니메이션**: [`hardware/media/assembly-animation.mp4`](hardware/media/assembly-animation.mp4) (27 s)
+
 상세 문서: [01 고관절 AK45](docs/mechanical/01-hip-actuator-AK45.md) ·
 [02 조인트/부시/샤프트](docs/mechanical/02-joints-bushings-shafts.md) ·
 [03 질량·무게중심·힙토크](docs/mechanical/03-mass-cog-hip-torque.md) ·
 [04 3D프린팅 방향·인필](docs/mechanical/04-print-orientation-infill.md)
+
+**발표자료**: [2026-2학기 1주차 — 하드웨어 제작·설계 및 시뮬레이션 결과 보고](docs/presentations/2026-2-week1/)
+(슬라이드 12장 + Simulink 시뮬레이션 영상 4편 + 모터 구동영상 3편 + 어셈블리 영상)
 
 ---
 
@@ -218,7 +223,9 @@ ros2 param get /robot_state_publisher robot_description
 | `hardware/print/print-ready/` | 슬라이서용 STL — 구멍 없음 + 눕힘 + 베드 최적 회전 |
 | `hardware/print/as-designed/` | 설계 그대로의 STL (구멍 포함) |
 | `hardware/analysis/` | 질량·힙토크·볼트·프린팅 강도 해석 스크립트 + 결과 |
+| `hardware/media/assembly-animation.mp4` | 어셈블리 애니메이션 |
 | `docs/mechanical/` | 기구 설계 상세 문서 4편 |
+| `docs/presentations/2026-2-week1/` | 2026-2학기 1주차 발표자료 (슬라이드·PDF·영상) |
 
 ## Customizing
 
