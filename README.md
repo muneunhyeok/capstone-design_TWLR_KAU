@@ -1,12 +1,44 @@
-# TWLR — Robot Description
+# TWLR — 2륜 밸런싱 로봇 (한국항공대 캡스톤디자인)
 
-![TWLR](images/robot.png)
+![TWLR](hardware/images/assembly_iso.png)
 
-## Overview
+이 저장소는 두 부분으로 나뉩니다.
+
+| | 내용 | 진입점 |
+|---|---|---|
+| **기구 설계 (CAD)** | Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
+| **ROS 2 description** | URDF/xacro, 메시, RViz·robot_state_publisher 런치 | [`urdf/`](urdf/) · 아래 섹션 |
+
+## 기구 설계 요약 → [`hardware/README.md`](hardware/README.md)
+
+| | |
+|---|---|
+| Fusion 문서 | `TWLR_assembly_AK45` (컴포넌트 31 / 오컬런스 55 / 타임라인 281) |
+| 총질량 | **11.19 kg** (PLA 벽 6줄 / 인필 20 %) |
+| 무게중심 | 지면 위 **270.8 mm**, 휠축 위 **184.8 mm**, 좌우 대칭 X = 0.000 mm |
+| 고관절 | CubeMars **AK45-36 V3.0 KV80** × 2 — 직립 시 필요토크 **9.51 N·m** (정격 8 의 119 %, 피크 24 의 40 %) |
+| 휠 | **WA172E** 인휠모터 Ø172 × 2 (4-M6 PCD36 체결) |
+| 다리 | 좌우 **4절 링크**, 가동범위 Δθ = −27.1° … +36.1° |
+
+상세 문서: [01 고관절 AK45](docs/mechanical/01-hip-actuator-AK45.md) ·
+[02 조인트/부시/샤프트](docs/mechanical/02-joints-bushings-shafts.md) ·
+[03 질량·무게중심·힙토크](docs/mechanical/03-mass-cog-hip-torque.md) ·
+[04 3D프린팅 방향·인필](docs/mechanical/04-print-orientation-infill.md)
+
+---
+
+# ROS 2 Robot Description
+
+> ⚠️ **아래 URDF 는 구버전 Fusion 모델에서 자동생성된 것입니다.**
+> 질량 63.541 kg, 링크명 `link1`/`link3` 등은 현재 CAD(`TWLR_assembly_AK45`, 11.19 kg)와 맞지 않습니다.
+> 기구가 확정되었으므로 URDF 재생성이 필요합니다 — 실제 질량·관성값은
+> [`hardware/analysis/results/mass-and-cog.txt`](hardware/analysis/results/mass-and-cog.txt) 참고.
+
+## Overview (구버전 자동생성값)
 
 | Property | Value |
 |----------|-------|
-| Total mass | 63.541 kg |
+| Total mass | 63.541 kg *(실제 11.19 kg)* |
 | Links | 7 |
 | Joints | 6 (6 movable) |
 | Assemblies | 14 |
@@ -180,6 +212,13 @@ ros2 param get /robot_state_publisher robot_description
 | `config/ros2_controllers.yaml` | Generated ros2_control controller manager config |
 | `robot_data.yaml` | Supplementary data (beyond URDF) |
 | `docs/transforms.md` | Transformation matrices (KaTeX) |
+| `hardware/` | **기구 설계 — CAD, STL, 해석 (아래 표)** |
+| `hardware/cad/TWLR_assembly_AK45.f3d` | Fusion 360 어셈블리 원본 |
+| `hardware/cad/step/` | 신규 가공품 STEP (허브·마운트링·샤프트 3종) |
+| `hardware/print/print-ready/` | 슬라이서용 STL — 구멍 없음 + 눕힘 + 베드 최적 회전 |
+| `hardware/print/as-designed/` | 설계 그대로의 STL (구멍 포함) |
+| `hardware/analysis/` | 질량·힙토크·볼트·프린팅 강도 해석 스크립트 + 결과 |
+| `docs/mechanical/` | 기구 설계 상세 문서 4편 |
 
 ## Customizing
 
