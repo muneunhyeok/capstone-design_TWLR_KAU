@@ -1,6 +1,17 @@
 # TWLR — 2륜 밸런싱 로봇 (한국항공대 캡스톤디자인)
 
-![TWLR](hardware/images/assembly_iso.png)
+<table>
+<tr>
+<td width="50%" align="center"><a href="hardware/media/motion-showcase.mp4"><img src="docs/readme/showcase.gif" alt="TWLR 모션 쇼케이스"></a></td>
+<td width="50%" align="center"><a href="hardware/media/assembly-animation-v2.mp4"><img src="docs/readme/assembly.gif" alt="TWLR 어셈블리"></a></td>
+</tr>
+<tr>
+<td align="center"><b>모션 쇼케이스</b> — SQUAT · ROLL · DRIVE · TURN<br><sub>서보 축 높이 340–510 mm · 좌우 독립 롤 · 도립진자 밸런싱 주행 · 선회 시 기울기 보정</sub><br><a href="hardware/media/motion-showcase.mp4">▶ 원본 영상 (42 s)</a></td>
+<td align="center"><b>어셈블리</b> — 링크부 → 토르소부 → 링크부 + 몸체<br><sub>좌우 4절 링크 다리 · 상·하판 서브어셈블리 · 커플러 부시 샤프트 체결</sub><br><a href="hardware/media/assembly-animation-v2.mp4">▶ 원본 영상 (36 s)</a></td>
+</tr>
+</table>
+
+<sub>GIF 는 1.5~2 배속 미리보기입니다. 클릭하면 원본 mp4 로 이동합니다.</sub>
 
 > **최근 변경 (2026-10)** — 고관절 액추에이터를 CubeMars AK45-36 → **Damiao DM-J4340P-2EC** 로 교체 (AK45 배송 지연).
 > 토크 해석 재계산, 구매 BOM, 2·3주차 발표자료, 모션 쇼케이스·어셈블리 v2 영상 추가.
