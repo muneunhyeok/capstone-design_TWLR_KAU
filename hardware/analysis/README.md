@@ -11,14 +11,24 @@
 | `bolt_check.py` | 볼트 마찰 전달 여유, PLA 면압, 열간삽입 인서트 비교 |
 
 ```bash
-python3 mass_cog.py        # → parts.json
+python3 mass_cog.py        # → parts.json   (고관절 기본 = DM4340P)
 python3 hip_torque3.py
-python3 sweep_infill.py
+python3 sweep_infill.py    # parts.json 을 마지막 조합으로 덮어쓰므로 마지막에 실행
 python3 print_strength.py
-python3 bolt_check.py
+python3 bolt_check.py      # ※ 아직 AK45 플랜지(피크 24 N·m) 기준
+
+# 이전안(AK45-36) 재현
+TWLR_ACT=AK45 python3 mass_cog.py && TWLR_ACT=AK45 python3 hip_torque3.py
 ```
 
-결과 스냅샷: [`results/`](results/)
+고관절 액추에이터 사양은 `mass_cog.py` / `hip_torque3.py` 상단 `ACTUATORS` 표에 있습니다.
+
+| 키 | 모델 | 질량 | 정격 / 피크 |
+|---|---|---|---|
+| `DM4340P` (기본) | Damiao DM-J4340P-2EC 24 V, 40:1 | 375 g | 9 / 27 N·m |
+| `AK45` | CubeMars AK45-36 V3.0 KV80 | 349 g | 8 / 24 N·m |
+
+결과 스냅샷: [`results/`](results/) — 접미사 없는 파일이 DM4340P, `*_AK45.txt` 가 이전안
 
 ## 해석 가정
 

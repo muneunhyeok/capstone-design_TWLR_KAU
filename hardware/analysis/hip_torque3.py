@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
-import math, json
+"""4절 링크 폐쇄해 + 가상일 원리로 고관절 필요토크.  mass_cog.py 를 먼저 실행 (parts.json).
+   액추에이터 정격/피크는 mass_cog.py 의 TWLR_ACT 선택을 따름 (기본 DM4340P)."""
+import math, json, os
+HERE=os.path.dirname(os.path.abspath(__file__))
+ACTUATORS={
+    "AK45":    dict(name="CubeMars AK45-36 V3.0 KV80", rated=8.0, peak=24.0),
+    "DM4340P": dict(name="Damiao DM-J4340P-2EC (24V, 40:1)", rated=9.0, peak=27.0),
+}
+ACT_KEY=os.environ.get("TWLR_ACT","DM4340P"); ACT=ACTUATORS[ACT_KEY]
+T_RATED=ACT["rated"]; T_PEAK=ACT["peak"]
 g=9.80665
-rows=json.load(open("/home/claude/twlr/parts.json"))
+rows=json.load(open(os.path.join(HERE,"parts.json")))
 HIP=(0.,0.); A=(114.,49.); KNEE0=(174.,-164.); B0=(228.5,-128.6); WHL0=(4.,-336.); RW=86.
 sub=lambda p,q:(p[0]-q[0],p[1]-q[1]); nrm=lambda v:math.hypot(*v); ang=lambda v:math.atan2(v[1],v[0])
 def rot(v,a): c,s=math.cos(a),math.sin(a); return (c*v[0]-s*v[1], s*v[0]+c*v[1])
@@ -51,17 +60,14 @@ def tau(dd):
     if a is None or b is None: return None
     return (energy(a)[0]-energy(b)[0])/(2*hstep)/2.0     # 다리 1개당 N·m
 
-KT_OUT = 0.11*36        # N·m/A  (모터 Kt 0.11 x 감속비 36)
-I_CONT = 2.0            # A 정격
-I_PEAK = 6.5            # A 피크
-print("="*118)
-print(" AK45-36 V3.0 고관절 정역학  —  다리 1개당 필요 토크와 모터 여유")
-print(f" 출력 토크상수 Kt_out = 0.11 x 36 = {KT_OUT:.2f} N·m/A   (정격 2 A -> {KT_OUT*I_CONT:.1f} N·m, 피크 6.5 A -> {KT_OUT*I_PEAK:.1f} N·m)")
-print("="*118)
-print(f"{'접힘Δθ':>8s}{'힙높이':>9s}{'CoG높이':>9s}{'무릎각':>8s}{'필요토크':>10s}{'필요전류':>10s}"
-      f"{'정격8N·m':>10s}{'피크24':>8s}{'허용듀티':>10s}{'판정':>16s}")
-print(f"{'[deg]':>8s}{'[mm]':>9s}{'[mm]':>9s}{'[deg]':>8s}{'[N·m]':>10s}{'[A]':>10s}{'대비':>10s}{'대비':>8s}{'(I²기준)':>10s}{'':>16s}")
-print("-"*118)
+print("="*104)
+print(f" {ACT['name']} 고관절 정역학  —  다리 1개당 필요 토크와 모터 여유")
+print(f" 정격 {T_RATED:g} N·m / 피크 {T_PEAK:g} N·m (출력축).  허용듀티 = (정격/필요)² — 전류∝토크 가정의 I² 발열 기준")
+print("="*104)
+print(f"{'접힘Δθ':>8s}{'힙높이':>9s}{'CoG높이':>9s}{'무릎각':>8s}{'필요토크':>10s}"
+      f"{'정격 대비':>10s}{'피크 대비':>10s}{'허용듀티':>10s}{'판정':>16s}")
+print(f"{'[deg]':>8s}{'[mm]':>9s}{'[mm]':>9s}{'[deg]':>8s}{'[N·m]':>10s}{'':>10s}{'':>10s}{'(I²기준)':>10s}{'':>16s}")
+print("-"*104)
 data=[]
 for d in [-30,-25,-22,-20,-15,-10,-5,0,5,10,15,20,22,25,27,29,30,31,32]:
     dd=math.radians(d); st=track(dd)
@@ -69,13 +75,13 @@ for d in [-30,-25,-22,-20,-15,-10,-5,0,5,10,15,20,22,25,27,29,30,31,32]:
     t=tau(dd)
     if t is None: print(f"{d:8.0f}   (한계 근처)"); continue
     t=abs(t); E,M,cz,Hh=energy(st)
-    I=t/KT_OUT; duty=min(1.0,(I_CONT/I)**2)
+    duty=min(1.0,(T_RATED/t)**2)
     kn=math.degrees(st['ph2']-st['ph1'])
-    verdict = "연속 가능" if t<=8 else ("피크내 (단시간)" if t<=24 else "불가")
-    print(f"{d:8.0f}{Hh:9.0f}{cz:9.0f}{kn:8.1f}{t:10.2f}{I:10.2f}{t/8*100:9.0f}%{t/24*100:7.0f}%{duty*100:9.0f}%{verdict:>16s}")
-    data.append((d,Hh,cz,kn,t,I,duty))
+    verdict = "연속 가능" if t<=T_RATED else ("피크내 (단시간)" if t<=T_PEAK else "불가")
+    print(f"{d:8.0f}{Hh:9.0f}{cz:9.0f}{kn:8.1f}{t:10.2f}{t/T_RATED*100:9.0f}%{t/T_PEAK*100:9.0f}%{duty*100:9.0f}%{verdict:>16s}")
+    data.append((d,Hh,cz,kn,t,duty))
 
-json.dump(data, open("/home/claude/twlr/torque2.json","w"))
+json.dump(data, open(os.path.join(HERE,"torque2.json"),"w"))
 
 print()
 def find(lo,hi,target):
@@ -86,8 +92,18 @@ def find(lo,hi,target):
         if abs(t)<target: lo=mid
         else: hi=mid
     return (lo+hi)/2
-c8=find(-25,-20,8.0); c24=find(29,31,24.0)
-for nm,c in (("정격 8 N·m 초과 시작", c8), ("피크 24 N·m 도달", c24)):
+def bracket(target):
+    """필요토크가 target 을 넘는 첫 1° 구간"""
+    prev=None
+    for d in range(-27,37):
+        st=track(math.radians(d)); t=tau(math.radians(d))
+        if st is None or t is None: continue
+        if abs(t)>=target and prev is not None: return find(prev,d,target)
+        prev=d
+    return None
+cR=bracket(T_RATED); cP=bracket(T_PEAK)
+for nm,c in ((f"정격 {T_RATED:g} N·m 초과 시작", cR), (f"피크 {T_PEAK:g} N·m 도달", cP)):
+    if c is None: print(f"  {nm}: 가동범위 내 없음"); continue
     st=track(math.radians(c)); E,M,cz,Hh=energy(st)
     print(f"  {nm}:  Δθ = {c:+.2f}°  →  힙높이 {Hh:.0f} mm, CoG높이 {cz:.0f} mm, 무릎각 {math.degrees(st['ph2']-st['ph1']):.1f}°, 필요토크 {abs(tau(math.radians(c))):.2f} N·m")
 lo,hi=-30.0,-25.0

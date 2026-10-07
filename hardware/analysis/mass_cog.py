@@ -1,9 +1,26 @@
 # -*- coding: utf-8 -*-
-"""TWLR_assembly_AK45  질량 / 무게중심 / 힙토크 해석
+"""TWLR 질량 / 무게중심 / 힙토크 해석
    좌표계: CAD 어셈블리 좌표 (mm).  원점 = 좌우 고관절 축의 중앙
    X = 좌우(우측 +), Y = 전후, Z = 상하(위 +).  고관절 축은 (Y=0, Z=0)
+
+   고관절 액추에이터 선택:  TWLR_ACT=DM4340P (기본, 현재) | TWLR_ACT=AK45 (이전안)
+     python3 mass_cog.py                 # DM4340P
+     TWLR_ACT=AK45 python3 mass_cog.py   # AK45 기준 재현
+   ※ 액추에이터 형상/중심은 CAD(TWLR_assembly_AK45)의 AK45 자리값을 그대로 씀.
+     DM4340P 외형 Ø57 x 56.5 는 AK45 Ø55 x 56.5 와 거의 같아 중심 위치 변화는 무시.
 """
-import math, json
+import math, json, os
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+# ---------------------------------------------------------------- 고관절 액추에이터
+ACTUATORS = {
+    # mass[g], rated / peak [N·m] (출력축 기준)
+    "AK45":    dict(name="CubeMars AK45-36 V3.0 KV80", mass=349.0, rated=8.0, peak=24.0),
+    "DM4340P": dict(name="Damiao DM-J4340P-2EC (24V, 40:1)", mass=375.0, rated=9.0, peak=27.0),
+}
+ACT_KEY = os.environ.get("TWLR_ACT", "DM4340P")
+ACT = ACTUATORS[ACT_KEY]
 
 # ---------------------------------------------------------------- CAD 측정값
 # (name, V[mm^3], A[mm^2], cx, cy, cz, group, matkey)
@@ -16,8 +33,8 @@ P = [
  ("PCB",                         8485.9,  13206.6,   -0.313, -66.403,  50.290, "BODY","PCB"),
  ("Carte PCB",                   1630.9,   2934.3,   60.318,   0.201,  49.026, "BODY","PCB"),
  ("Driver PCB v3.5",            34498.0,  33843.3,   -3.117,-124.839, -28.367, "BODY","PCB"),
- ("20_ACT AK45 L",             132909.4,  15890.3, -111.854,  -0.106,   0.000, "BODY","AK45"),
- ("20_ACT AK45 R",             132909.4,  15890.3,  111.854,   0.106,   0.000, "BODY","AK45"),
+ (f"20_ACT {ACT_KEY} L",             132909.4,  15890.3, -111.854,  -0.106,   0.000, "BODY","ACT"),
+ (f"20_ACT {ACT_KEY} R",             132909.4,  15890.3,  111.854,   0.106,   0.000, "BODY","ACT"),
  ("22_MNT ring L",              11738.3,   7104.9, -141.500,   0.000,   0.000, "BODY","AL"),
  ("22_MNT ring R",              11738.3,   7104.9,  141.500,   0.000,   0.000, "BODY","AL"),
 
@@ -49,7 +66,7 @@ P = [
 
 # ------------------------------------------------------- 재료 / 질량 모델
 RHO = {"PLA":1.24, "AL":2.70, "STEEL":7.85, "IGL":1.49, "PCB":1.90}
-FIXED_MASS = {"WA172E":2200.0, "AK45":349.0, "BATT":700.0}   # g, 데이터시트/실측
+FIXED_MASS = {"WA172E":2200.0, "ACT":ACT["mass"], "BATT":700.0}   # g, 데이터시트/실측
 INFILL   = 0.20      # 인필 20 % (3D프린팅 검토 권장값)
 WALL_T   = 2.4       # 벽 6줄 x 0.4 mm
 
@@ -74,7 +91,7 @@ CY = sum(r["m"]*r["c"][1] for r in rows)/M
 CZ = sum(r["m"]*r["c"][2] for r in rows)/M
 
 print("="*104)
-print(" TWLR_assembly_AK45  질량표   (PLA 인필 20 %, 벽 6줄=2.4 mm 셸 모델)")
+print(f" TWLR 질량표 — 고관절 {ACT['name']} {ACT['mass']:.0f} g   (PLA 인필 {INFILL*100:.0f} %, 벽 {WALL_T} mm 셸 모델)")
 print("="*104)
 print(f"{'부품':30s}{'체적[cm3]':>11s}{'재료':>9s}{'유효충전율':>11s}{'질량[g]':>10s}   중심 (X, Y, Z) mm")
 print("-"*104)
@@ -92,4 +109,4 @@ print()
 grp={}
 for r in rows: grp[r["g"]]=grp.get(r["g"],0)+r["m"]
 for k,v in grp.items(): print(f"   그룹 {k:6s}: {v/1000:6.3f} kg")
-json.dump(rows, open("/home/claude/twlr/parts.json","w"))
+json.dump(rows, open(os.path.join(HERE, "parts.json"), "w"))

@@ -1,9 +1,24 @@
 # 03 — 질량 · 무게중심 · 고관절 토크
 
-재현: `hardware/analysis/mass_cog.py` → `hip_torque3.py`
-결과 스냅샷: [`mass-and-cog.txt`](../../hardware/analysis/results/mass-and-cog.txt) ·
+> **2026-10 갱신 — 고관절이 Damiao DM-J4340P-2EC 로 바뀌었습니다.** 스크립트 기본값이 DM4340P 입니다.
+>
+> | | AK45 (이 문서 §2~§6 의 표) | **DM4340P (현재)** |
+> |---|---|---|
+> | 총질량 / CoG 지면높이 | 11.187 kg / 270.8 mm | **11.239 kg / 271.5 mm** |
+> | 직립 필요토크 | 9.51 N·m (정격 8 의 119 %) | **9.59 N·m (정격 9 의 107 %)** |
+> | 연속 정격 유지 자세 | Δθ ≤ −20.0° | **Δθ ≤ −5.5°** |
+> | 피크 도달 | +30.8° (24 N·m) | **+31.8° (27 N·m)** |
+>
+> 상세·전체 표: [05 — 고관절 액추에이터 변경](05-hip-actuator-DM4340P.md).
+> 아래 본문은 질량 모델·계산 방법 설명과 AK45 기준 기록으로 남겨 둡니다.
+
+재현: `hardware/analysis/mass_cog.py` → `hip_torque3.py` (`TWLR_ACT=AK45` 로 이전안 재현)
+결과 스냅샷 (DM4340P): [`mass-and-cog.txt`](../../hardware/analysis/results/mass-and-cog.txt) ·
 [`hip-torque.txt`](../../hardware/analysis/results/hip-torque.txt) ·
 [`infill-sweep.txt`](../../hardware/analysis/results/infill-sweep.txt)
+· AK45 기록: [`hip-torque_AK45.txt`](../../hardware/analysis/results/hip-torque_AK45.txt) ·
+[`mass-and-cog_AK45.txt`](../../hardware/analysis/results/mass-and-cog_AK45.txt) ·
+[`infill-sweep_AK45.txt`](../../hardware/analysis/results/infill-sweep_AK45.txt)
 
 ## 1. 질량 모델
 
@@ -17,7 +32,7 @@ m       = V · ρ_PLA · f                      ρ_PLA = 1.24 g/cm³
 
 구매품(WA172E 2,200 g, AK45 349 g, 배터리 700 g)은 데이터시트/실측 고정값입니다.
 
-## 2. 결과 (벽 6줄 / 인필 20 %)
+## 2. 결과 (벽 6줄 / 인필 20 %, AK45 기준)
 
 | 항목 | 값 |
 |---|---|
@@ -52,7 +67,7 @@ BODY 는 고정, THIGH 는 고관절 중심 회전 φ1, SHIN 은 무릎 중심 �
 
 모터 출력 토크상수 **Kt_out = 0.11 × 36 = 3.96 N·m/A** (정격 2 A → 7.9 N·m, 피크 6.5 A → 25.7 N·m)
 
-## 4. 결과
+## 4. 결과 (AK45 기준)
 
 | 접힘 Δθ | 힙높이 | CoG높이 | 무릎각 | 필요토크 | 전류 | 정격 8 대비 | 피크 24 대비 | 허용듀티 | 판정 |
 |---|---|---|---|---|---|---|---|---|---|
