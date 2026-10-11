@@ -43,8 +43,8 @@
 > **볼 리니어부시(LM 부시)로 직선 왕복 전용**입니다. 회전시키면 볼이 궤도를 압흔(brinelling)시켜
 > 수 시간 만에 유격이 생깁니다. TWLR 의 A·KNEE·B 조인트는 전부 요동 회전이므로 사용 불가.
 > → **오일리스 부시(MPFZ) / OILES GSF / DU 부시**로 대체.
-> 샤프트도 **양단 암나사 타입(SFJ/PSFJ)** 을 골라야 합니다.
-> 상세: [`../../mechanical/02-joints-bushings-shafts.md`](../../mechanical/02-joints-bushings-shafts.md#3-misumi-부품--️-선택하신-품번은-회전에-쓰면-안-됩니다)
+> 샤프트도 **양단 암나사 타입(SFJ/PSFJ)** 을 선택해야 합니다.
+> 상세: [`../../mechanical/02-joints-bushings-shafts.md`](../../mechanical/02-joints-bushings-shafts.md#3-misumi-부품--리니어부시는-회전에-쓰면-안-됩니다)
 
 <img src="slides/slide-07.png" width="720">
 

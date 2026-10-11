@@ -1,5 +1,7 @@
 # TWLR — Fusion 360 MCP 연결 & URDF 변환 가이드
 
+> ⚠️ **초기 모델 기준 문서** — 이 가이드는 초기 모델(Orange Pi · 1000 mAh LiPo · FeeTech 서보) 시점의 MCP/URDF 변환 절차를 기록한 것입니다. 현재 하드웨어 구성과 질량은 [`hardware/README.md`](../../hardware/README.md)를 기준으로 합니다. 변환 절차 자체(MCP 연결 → URDF 추출)는 그대로 유효합니다.
+>
 > 작성 목적: 다른 팀원도 처음부터 동일하게 재현할 수 있도록, 두 작업 세션(① Claude Desktop ↔ Fusion 360 MCP 연결, ② Fusion 모델 → URDF 변환 → RViz2/Gazebo 실행)을 단계별로 정리한 문서.
 >
 > 환경: Windows(작업 PC) + Fusion 360(교육용 라이선스) / Ubuntu 24.04 + ROS2 Jazzy + Gazebo Harmonic(gz sim 8.11.0)
