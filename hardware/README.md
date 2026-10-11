@@ -118,18 +118,19 @@ Fusion 360 문서: **`TWLR_assembly_AK45`** — 컴포넌트 31, 오컬런스 55
 | 허브 ↔ 허벅지 | 8 × M4, PCD60 | M4×35, 허브에 탭 |
 | 종아리 ↔ WA172E | 4 × M6, PCD36 + Ø49.95 스피곳 | **Ø18 대형와셔 + 조임 4~6 N·m 제한** |
 
-## 4-1. 전장 구성 (2·3주차 진행)
+## 4-1. 전장 구성 (2·3주차 진행 → CAN 통합 계획)
 
 | 계층 | 부품 | 역할 / 확인 상태 |
 |---|---|---|
-| 상위 제어기 | **LattePanda** (4 GB / 64 GB, Win10 Ent.) | 상태 모니터링·데이터 처리, Teensy 에 목표 자세·속도 전달 — 부팅·환경 테스트 완료 |
-| 하위 제어기 | **Teensy 4.1** | IMU 수신, 액추에이터 지령 — USB 시리얼로 상위와 연결 |
-| 자세 센서 | **BNO085** IMU (I²C) | Game Rotation Vector 쿼터니언 → Roll/Pitch/Yaw 변환 출력 확인 |
-| 고관절 | DM4340P × 2 | CAN 1 Mbps (CAN 트랜시버 경유) |
-| 휠 | WA172E × 2 + ODrive | LattePanda 에서 ODrive 설정·속도 제어 구동 확인 (pole_pairs 15, cpr 3200) |
-| 전원 | 6S 22.2 V + 24 → 5 V 강압 | XT90 |
+| 상위 제어기 | **LattePanda** (4 GB / 64 GB) | 부팅·환경 테스트 완료. 통합 후에는 Ubuntu 24.04 · ROS 2 Jazzy 로 명령 · 기록 · 시각화만 담당 |
+| 하위 제어기 | **Teensy 4.1** | 500 Hz 실시간 루프 — 상태추정 · LQR 밸런싱 · 고관절 MIT · 안전 상태머신. USB 시리얼(CRC16 패킷)로 상위와 연결 |
+| 자세 센서 | **BNO085** IMU (I²C 18/19, 0x4A) | Game Rotation Vector 쿼터니언 → Roll/Pitch/Yaw 출력 확인 |
+| 고관절 | DM4340P × 2 | **CAN1** 1 Mbps · MIT 모드 · ID 1/2, 피드백 0x11/0x12 — 입고 후 미시험 |
+| 휠 | WA172E × 2 + ODrive v3.6 | USB 속도 제어 구동 확인 (pole_pairs 15, cpr 3200) → **CAN2** 1 Mbps 토크 모드 · node 0/1 로 전환 예정 |
+| CAN 트랜시버 | SN65HVD230 × 3 (3.3 V) | CAN1 · CAN2 + 예비 1. Teensy 핀은 5 V 비허용이라 3.3 V 품 사용 |
+| 전원 | 6S 22.2 V + 24 → 5 V 강압 | XT90 → WAGO 221-415 분배. **30 A 퓨즈 · 메인/비상 스위치 추가 필요** |
 
-코드·영상: [3주차 발표](../docs/presentations/2026-2-week3/)
+코드·영상: [3주차 발표](../docs/presentations/2026-2-week3/) · CAN 통합 계획 · 원리 · 운용: [`docs/electronics/`](../docs/electronics/)
 
 ## 5. 해석 요약
 

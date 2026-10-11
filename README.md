@@ -13,16 +13,18 @@
 
 <sub>GIF 는 1.5~2 배속 미리보기입니다. 클릭하면 원본 mp4 로 이동합니다.</sub>
 
-> **최근 변경 (2026-10)** — 고관절 액추에이터를 CubeMars AK45-36 → **Damiao DM-J4340P-2EC** 로 교체 (AK45 배송 지연).
-> 토크 해석 재계산, 구매 BOM, 2·3주차 발표자료, 모션 쇼케이스·어셈블리 v2 영상 추가.
+> **최근 변경 (2026-10)**
+> - **2학기 통합본 발표 추가** — 1~3주차를 주제별로 재구성하고, CAN 통합 구동 계획 · 코드 원리 · 운용 방법을 새로 정리 → [발표](docs/presentations/2026-2-integrated/) · [전장 · 제어 문서](docs/electronics/)
+> - 고관절 액추에이터를 CubeMars AK45-36 → **Damiao DM-J4340P-2EC** 로 교체 (AK45 배송 지연). 토크 해석 재계산, 구매 BOM, 2·3주차 발표자료, 모션 쇼케이스·어셈블리 v2 영상 추가.
 
-**처음 보신다면** — ① 위 영상 → ② [기구 설계 요약](#기구-설계-요약) → ③ [해석 결과](#핵심-해석-결과) → ④ [발표자료](#발표자료-2026-2학기)
+**처음 보신다면** — ① 위 영상 → ② [기구 설계 요약](#기구-설계-요약) → ③ [해석 결과](#핵심-해석-결과) → ④ [전장 · 제어](#전장--제어--can-통합-구동-계획) → ⑤ [발표자료](#발표자료-2026-2학기)
 
-이 저장소는 두 부분으로 나뉩니다.
+이 저장소는 세 부분으로 나뉩니다.
 
 | | 내용 | 진입점 |
 |---|---|---|
 | **기구 설계 (CAD)** | CATIA, Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
+| **전장 · 제어** | CAN 통합 구동 계획(DM4340P · ODrive · IMU → Teensy 500 Hz → ROS 2), 제어 원리, 운용 방법, 설정 스크립트 | [`docs/electronics/`](docs/electronics/) · [`firmware/`](firmware/) · [`host/`](host/) |
 | **ROS 2 description** | URDF/xacro, 메시, RViz·robot_state_publisher 런치 | [`urdf/`](urdf/) · [아래 섹션](#ros-2-robot-description) |
 
 ---
@@ -66,6 +68,24 @@
 
 > **열려 있는 항목 6건**(토르소 실측 질량, DM4340P 설치도면 반영 등)은 [`hardware/README.md` §6](hardware/README.md#6-미해결--판단-필요)에 숨기지 않고 적어 두었습니다.
 
+## 전장 · 제어 — CAN 통합 구동 계획
+
+**Teensy 4.1 이 CAN1(고관절) · CAN2(휠) · I²C(IMU)를 500 Hz 로 직접 돌리고, LattePanda 는 ROS 2 로 명령 · 기록만 맡습니다.**
+상태: 휠 · IMU 단품 구동 확인 → 고관절 DM4340P 입고 후 bring-up 8단계 진행 예정 (2026-10 기준)
+
+| 항목 | 내용 |
+|---|---|
+| **버스** | CAN1 1 Mbps — DM4340P × 2 (MIT 모드) · CAN2 1 Mbps — ODrive 2축 (토크 모드) · ID 충돌을 피하려 분리, 부하 약 25 % |
+| **밸런싱** | 바퀴 달린 역진자 + LQR — Q = diag(5, 2, 200, 5), R = 1 → K = 2.24 / 4.10 / 28.4 / 4.59, 휠 토크 ±8 N·m |
+| **고관절** | MIT 모드 Kp 40 · Kd 1.5(공중) / 3.0(서기) + 높이별 중력보상 × 0.8, 기본 높이 455 mm (정격 9 N·m 연속 영역) |
+| **안전** | 상태머신 BOOT → IDLE → CALIB → READY → BALANCE / FAULT, 3중 워치독 (ROS 250 ms · DM 100 ms · ODrive 0.2 s) |
+| **ROS 2** | USB 시리얼 패킷(CRC16) — Command 50 Hz / Telemetry 100 Hz → `/imu/data` · `/joint_states` · `/odom` |
+
+**문서** — [01 CAN 통합 구동 계획](docs/electronics/01-can-integration-plan.md) ·
+[02 코드 해설 · 원리 · 이론](docs/electronics/02-control-principles.md) ·
+[03 운용 방법](docs/electronics/03-operation-manual.md) ·
+설정: [ODrive CAN](host/odrive_can_setup.odrivetool.py) · [DM4340P](host/dm4340p_setup.md)
+
 ## 발표자료 (2026-2학기)
 
 | 주차 | 발표일 | 제목 | 주요 내용 |
@@ -73,6 +93,7 @@
 | [1주차](docs/presentations/2026-2-week1/) | 09-07 | 하드웨어 제작·설계 및 시뮬레이션 결과 보고 | Simulink, 부시·샤프트, 모터 구동 |
 | [2주차](docs/presentations/2026-2-week2/) | 09-14 | 하드웨어 제작 및 시뮬레이션 결과 보고 | Simulink(CoM·피치), 모션 시뮬레이션, 부시 최소길이, 링크 3D 프린팅, 모듈 구동 |
 | [3주차](docs/presentations/2026-2-week3/) | 09-21 | 하드웨어 제작 및 센서 구동 테스트 | 구동각 제한(조립·간섭·전달각), 정역학·동역학, LattePanda 휠 구동, BNO085 IMU |
+| [**통합본**](docs/presentations/2026-2-integrated/) | 10월 | 2학기 하드웨어 통합 보고 + CAN 구동 · 해설 · 운용 (110장) | 1~3주차 주제별 재구성, 토르소 제작 현황, **CAN 통합 계획 · 코드 원리 · 운용 방법** |
 
 ---
 
@@ -276,8 +297,10 @@ ros2 param get /robot_state_publisher robot_description
 | `hardware/bom/` | 구매 BOM (xlsx + 요약) |
 | `docs/mechanical/` | 기구 설계 상세 문서 5편 (05 = DM4340P 변경) |
 | `firmware/` | Teensy 4.1 펌웨어 (BNO085 쿼터니언 송신) |
-| `host/` | LattePanda/Ubuntu 측 코드 (IMU 수신·파싱, ODrive 휠 설정) |
+| `host/` | LattePanda/Ubuntu 측 코드 (IMU 수신·파싱, ODrive 휠 설정, **ODrive CAN · DM4340P 1회 설정**) |
+| `docs/electronics/` | 전장 · 제어 문서 3편 (CAN 통합 계획 · 코드 원리 · 운용 방법) |
 | `docs/presentations/2026-2-week{1,2,3}/` | 2026-2학기 주차별 발표자료 (슬라이드·PDF·영상) |
+| `docs/presentations/2026-2-integrated/` | 2026-2학기 통합본 발표 (110장, 슬라이드·PDF) |
 
 ## Customizing
 
