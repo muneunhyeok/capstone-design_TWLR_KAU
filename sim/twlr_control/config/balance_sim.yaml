@@ -1,0 +1,27 @@
+# Balance controller parameters for Gazebo (stage 1, legs fixed, acrylic on).
+# Tuned on a planar model of the URDF. Change live with:
+#   ros2 param set /balance_controller <name> <value>
+balance_controller:
+  ros__parameters:
+    pitch_offset_deg: 5.8      # balance pitch (8.2 without acrylic). Integral term corrects small errors
+    kp_pitch: 30.0             # inner loop P  [N m/rad], both wheels together
+    kd_pitch: 4.0              # inner loop D  [N m s/rad]
+    kp_vel: 0.3                # outer loop P  [rad per m/s]
+    ki_vel: 0.5                # outer loop I  [rad per m]
+    vel_int_limit: 2.0
+    max_lean_deg: 15.0
+    kp_yaw: 0.5
+    ki_yaw: 1.0
+    yaw_int_limit: 0.5
+    max_wheel_torque: 10.0     # per wheel [N m]
+    wheel_radius: 0.086
+    vel_filter_tau: 0.02
+    max_speed: 0.4             # [m/s]
+    max_accel: 0.5             # [m/s^2]
+    max_yaw_rate: 1.5          # [rad/s]
+    fall_angle_deg: 35.0
+    rearm_angle_deg: 5.0
+    left_wheel_sign: 1.0
+    right_wheel_sign: 1.0
+    cmd_timeout: 0.5
+    enabled: true

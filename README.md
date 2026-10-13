@@ -14,6 +14,7 @@
 <sub>GIF 는 1.5~2 배속 미리보기입니다. 클릭하면 원본 mp4 로 이동합니다.</sub>
 
 > **최근 변경 (2026-10)**
+> - **Gazebo 시뮬레이션 추가** — CATIA 기반 새 URDF(9.62 kg) + 균형 제어기 `sim/`, 검증 결과 · CAD(11.24 kg) 와의 차이 · 열린 항목 → [sim](sim/) · [시뮬레이션 문서](docs/simulation/)
 > - **2학기 통합본 발표 추가** — 1~3주차를 주제별로 재구성하고, CAN 통합 구동 계획 · 코드 원리 · 운용 방법을 새로 정리 → [발표](docs/presentations/2026-2-integrated/) · [전장 · 제어 문서](docs/electronics/)
 > - 고관절 액추에이터를 CubeMars AK45-36 → **Damiao DM-J4340P-2EC** 로 교체 (AK45 배송 지연). 토크 해석 재계산, 구매 BOM, 2·3주차 발표자료, 모션 쇼케이스·어셈블리 v2 영상 추가.
 
@@ -25,7 +26,7 @@
 |---|---|---|
 | **기구 설계 (CAD)** | CATIA, Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
 | **전장 · 제어** | CAN 통합 구동 계획(DM4340P · ODrive · IMU → Teensy 500 Hz → ROS 2), 제어 원리, 운용 방법, 설정 스크립트 | [`docs/electronics/`](docs/electronics/) · [`firmware/`](firmware/) · [`host/`](host/) |
-| **ROS 2 description** | URDF/xacro, 메시, RViz·robot_state_publisher 런치 | [`urdf/`](urdf/) · [아래 섹션](#ros-2-robot-description) |
+| **ROS 2 · 시뮬레이션** | 새 URDF + Gazebo Harmonic 균형 시뮬레이션, 구버전 Fusion URDF | [`sim/`](sim/) · [`docs/simulation/`](docs/simulation/) · 구버전: [`urdf/`](urdf/) · [아래 섹션](#ros-2-robot-description) |
 
 ---
 
@@ -86,6 +87,23 @@
 [03 운용 방법](docs/electronics/03-operation-manual.md) ·
 설정: [ODrive CAN](host/odrive_can_setup.odrivetool.py) · [DM4340P](host/dm4340p_setup.md)
 
+## Gazebo 시뮬레이션
+
+**Ubuntu 24.04 + ROS 2 Jazzy + Gazebo Harmonic.** CATIA 어셈블리에서 만든 URDF 에 바퀴 달린 역진자 균형 제어기(속도 PI → pitch PD → 바퀴 토크)를 붙였습니다. 1단계는 다리 고정, 4절 링크를 움직이는 2단계는 아직 검증 전입니다.
+
+| 항목 | 내용 |
+|---|---|
+| **패키지** | [`sim/twlr_description`](sim/twlr_description/) (모델 · 월드 · 브리지) · [`sim/twlr_control`](sim/twlr_control/) (제어기) |
+| **실행** | 두 폴더를 `~/twlr/src` 로 복사 → `colcon build --symlink-install` → `ros2 launch twlr_control balance_sim.launch.py` |
+| **모델 값** | 총 **9.62 kg**(아크릴 제외 9.10) · 균형 pitch **5.79°**(8.16°) · 무게중심 지면 위 243.6 mm · 바퀴 Ø172 · 간격 488.2 mm |
+| **제어기 기본값** | kp_pitch 30 · kd_pitch 4 · kp_vel 0.3 · ki_vel 0.5 · 휠 토크 한계 10 N·m |
+| **검증 (Gazebo 없이)** | −6° ~ +15° 시작 · 0.6 m/s 밀침 회복 · 센서→토크 지연 50 ms · kp 18 ~ 45 · kd 3 ~ 8 안정 — **실제 Gazebo 구동은 미확인** |
+| **주의** | URDF 9.62 kg 과 CAD 해석 모델 11.24 kg 이 다름 · LQR 모델(극점 ±7.59)과 URDF 선형화(±6.54)도 다름 |
+
+**문서** — [01 구성 · 실행 · 값](docs/simulation/01-gazebo-simulation.md) ·
+[02 검증 결과 · CAD 와의 차이 · 열린 항목](docs/simulation/02-verification-and-open-items.md) ·
+재현: [`sim/verify/`](sim/verify/)
+
 ## 발표자료 (2026-2학기)
 
 | 주차 | 발표일 | 제목 | 주요 내용 |
@@ -99,6 +117,8 @@
 
 # ROS 2 Robot Description
 
+> 새 CATIA 기반 URDF 는 [`sim/twlr_description`](sim/twlr_description/) 에 있습니다 (9.62 kg, Gazebo 시뮬레이션용 · CAD 모델과의 차이는 [docs/simulation/02](docs/simulation/02-verification-and-open-items.md#3-시뮬-urdf-와-cad-모델의-차이)).
+>
 > ⚠️ **아래 URDF 는 구버전 Fusion 모델에서 자동생성된 것입니다.**
 > 질량 63.541 kg, 링크명 `link1`/`link3` 등은 현재 CAD(`TWLR_assembly_AK45`, DM4340P 반영 11.24 kg)와 맞지 않습니다.
 > 기구가 확정되었으므로 URDF 재생성이 필요합니다 — 실제 질량·관성값은
