@@ -41,7 +41,7 @@
 
 | # | 대상 | 어디서 | 내용 | 확인 |
 |---:|---|---|---|---|
-| 1 | DM4340P | Windows · Damiao 툴 | 모터 1개씩(24 V · 전류제한 3 A), ESC_ID 1/2 · MST_ID 0x11/0x12 · MIT · 12.5/8/28 · Timeout 2000, 기준 자세에서 영점 — [`host/dm4340p_setup.md`](../../host/dm4340p_setup.md) | `dm_single_test` → `e` → state 1 · 각도 0 근처 |
+| 1 | DM4340P | Windows · Damiao 툴 | 모터 1개씩(24 V · 전류제한 3 A), ESC_ID 1/2 · MST_ID 0x11/0x12 · MIT · 12.5/10/28 · Timeout 2000 (Teensy 로 할 때 [`dm_config_tool`](../../firmware/bringup/dm_config_tool/)), 기준 자세에서 영점 — [`host/dm4340p_setup.md`](../../host/dm4340p_setup.md) | `dm_single_test` → `e` → state 1 · 각도 0 근처 |
 | 2 | ODrive | LattePanda · odrivetool | [`host/odrive_can_setup.odrivetool.py`](../../host/odrive_can_setup.odrivetool.py) 블록 단위 붙여넣기 → 재부팅 → 휠 공중에서 모터 캘리브 1회 · `pre_calibrated = True` | `dump_errors(odrv0)` 에러 없음 · node_id 0 / 1 |
 | 3 | Teensy 펌웨어 | 노트북 · Arduino IDE 2 | Teensyduino(FlexCAN_T4 포함) · 라이브러리 Adafruit BNO08x · 보드 Teensy 4.1 / USB Type Serial / 600 MHz → `twlr_teensy.ino` 업로드 | — |
 | 4 | ROS 2 패키지 | LattePanda · 터미널 | 아래 명령 | `ls -l /dev/twlr_teensy` · `ros2 pkg list \| grep twlr` |

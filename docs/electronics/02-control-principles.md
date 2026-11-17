@@ -138,7 +138,7 @@ tx2(wheelL.setInputTorque(WHEEL_DIR_L * tau_L));  // [8] 모터가 마주 보고
 
 `u = round((x − xmin)·(2ⁿ − 1)/(xmax − xmin))` — 예: p = 1.0 rad → 13.5 × 65535 / 25 = 35 389 = `0x8A3D` → D0 = `8A`, D1 = `3D`.
 12 bit 값 두 개는 바이트를 반씩 나눠 쓴다: `f.data[3] = ((V & 0xF) << 4) | (KP >> 8);`
-**PMAX · VMAX · TMAX 가 모터 설정과 다르면 모든 값이 비례해서 틀어지므로** `config.h` = 디버깅 툴(12.5 / 8 / 28).
+**PMAX · VMAX · TMAX 가 모터 설정과 다르면 모든 값이 비례해서 틀어지므로** `config.h` = 모터 레지스터 값(12.5 / 10 / 28, 2026-11 Teensy 로 읽어 확인. 계획 단계 VMAX 8 에서 수정).
 
 ### MIT 모드 = 가상 스프링 · 댐퍼
 
