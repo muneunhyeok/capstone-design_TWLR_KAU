@@ -13,7 +13,12 @@
 
 <sub>GIF 는 1.5~2 배속 미리보기입니다. 클릭하면 원본 mp4 로 이동합니다.</sub>
 
-> **최근 변경 (2026-10)**
+> **최근 변경 (2026-11)**
+> - **고관절 DM4340P 실물 구동** — 좌 · 우 CAN ID 설정(1 / 0x11, 2 / 0x12) · 2개 동시 구동 · 방향 부호 확인, 바퀴 접지 상태에서 다리 접힘 · 펼침 성공 (11-16). 시험 스케치 `dm_config_tool` · `dm_dual_test` · `hip_step_test` + 로그 플롯 → [firmware/bringup](firmware/bringup/) · [05 시험 절차](docs/electronics/05-hip-drive-test-procedure.md)
+> - **고관절 토크 실측** — 실측 토크 = Kp × 추종 오차(처짐 6° → 2.8 ~ 3.4 N·m), PD 만으로는 몸통을 못 들어 중력보상 ff 도입 → [06 토크 · 중력보상](docs/electronics/06-hip-torque-gravity-comp.md)
+> - **10주차 · 11주차 추가분 발표 정리** → [10주차](docs/presentations/2026-2-week10/) · [11주차](docs/presentations/2026-2-week11/)
+>
+> **2026-10**
 > - **고관절 체결부 실물 반영** — DM4340P 를 받침 · 반쪽 클램프로 몸통 포켓에 고정하는 구조로 출력 · 체결, 외형 치수(기본 자세 / 최대 신장) 정리 → [기구 설계 요약](#기구-설계-요약)
 > - **Gazebo 시뮬레이션 추가** — CATIA 기반 새 URDF(9.62 kg) + 균형 제어기 `sim/`, 검증 결과 · CAD(11.24 kg) 와의 차이 · 열린 항목 → [sim](sim/) · [시뮬레이션 문서](docs/simulation/)
 > - **2학기 통합본 발표 추가** — 1~3주차를 주제별로 재구성하고, CAN 통합 구동 계획 · 코드 원리 · 운용 방법을 새로 정리 → [발표](docs/presentations/2026-2-integrated/) · [전장 · 제어 문서](docs/electronics/)
@@ -75,7 +80,7 @@
 ## 전장 · 제어 — CAN 통합 구동 계획
 
 **Teensy 4.1 이 CAN1(고관절) · CAN2(휠) · I²C(IMU)를 500 Hz 로 직접 돌리고, LattePanda 는 ROS 2 로 명령 · 기록만 맡습니다.**
-상태: 휠 · IMU 단품 구동 확인 → 고관절 DM4340P 입고 후 bring-up 8단계 진행 예정 (2026-10 기준)
+상태 (2026-11-16): 휠 M0 · M1 캘리브 · IMU 단품 확인, 고관절 DM4340P 좌우 ID · 2개 동시 구동 · 다리 접힘 · 펼침 확인 → 다음: 중력보상 ff 실측, DM 타임아웃 · 스토퍼, ODrive CAN2 전환. 시험용 상위 보드는 Khadas VIM4
 
 | 항목 | 내용 |
 |---|---|
@@ -88,6 +93,9 @@
 **문서** — [01 CAN 통합 구동 계획](docs/electronics/01-can-integration-plan.md) ·
 [02 코드 해설 · 원리 · 이론](docs/electronics/02-control-principles.md) ·
 [03 운용 방법](docs/electronics/03-operation-manual.md) ·
+[04 단품 시험 진행](docs/electronics/04-bringup-progress.md) ·
+[05 고관절 구동 시험 절차](docs/electronics/05-hip-drive-test-procedure.md) ·
+[06 토크 실측 · 중력보상](docs/electronics/06-hip-torque-gravity-comp.md) ·
 설정: [ODrive CAN](host/odrive_can_setup.odrivetool.py) · [DM4340P](host/dm4340p_setup.md)
 
 ## Gazebo 시뮬레이션
@@ -115,6 +123,8 @@
 | [2주차](docs/presentations/2026-2-week2/) | 09-14 | 하드웨어 제작 및 시뮬레이션 결과 보고 | Simulink(CoM·피치), 모션 시뮬레이션, 부시 최소길이, 링크 3D 프린팅, 모듈 구동 |
 | [3주차](docs/presentations/2026-2-week3/) | 09-21 | 하드웨어 제작 및 센서 구동 테스트 | 구동각 제한(조립·간섭·전달각), 정역학·동역학, LattePanda 휠 구동, BNO085 IMU |
 | [**통합본**](docs/presentations/2026-2-integrated/) | 10월 | 2학기 하드웨어 통합 보고 + CAN 구동 · 해설 · 운용 (110장) | 1~3주차 주제별 재구성, 토르소 제작 현황, **CAN 통합 계획 · 코드 원리 · 운용 방법** |
+| [10주차](docs/presentations/2026-2-week10/) | 11-09 | 제작 · 구동 통합 진행 현황 (14장) | 서보 결합 · 전체 조립 · 토르소 V2 · 지그, DM 단품 · 좌우 ID, ODrive 캘리브, C++/Python 역할, 모터 4개 통합 구조 |
+| [11주차 추가분](docs/presentations/2026-2-week11/) | 11-16 | 고관절 동시 구동 · 토크 실측 (6장) | 거울 장착 방향 부호, 5° 계단 스윕, 실측 토크 = Kp × 오차, 바퀴 접지 접힘 · 펼침 성공, 예측 vs 실측 |
 
 ---
 

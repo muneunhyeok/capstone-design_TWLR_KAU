@@ -136,7 +136,7 @@ DM L 명령 `0x001` 이 node 0 Heartbeat 와 ID 가 겹친다(고관절을 움�
 | 필드 | 비트 | 범위 | 1 LSB |
 |---|---:|---|---|
 | p_des | 16 | ±12.5 rad | 0.00038 rad (0.022°) |
-| v_des | 12 | ±8 rad/s | 0.0039 rad/s |
+| v_des | 12 | ±10 rad/s (실측 VMAX, 2026-11) | 0.0049 rad/s |
 | Kp | 12 | 0 – 500 | 0.122 N·m/rad |
 | Kd | 12 | 0 – 5 | 0.0012 N·m·s/rad |
 | τ_ff | 12 | ±28 N·m | 0.014 N·m |
@@ -307,7 +307,7 @@ type `0x01` Telemetry · `0x02` Command · `0x03` 로그 문자열
 | `CTRL_PERIOD_US` | 2000 (500 Hz) | 확정 |
 | `CAN1/CAN2_BAUD` | 1 000 000 | 확정 |
 | DM CAN_ID / MST_ID (L / R) | 0x01 / 0x02 · 0x11 / 0x12 | 확정 |
-| DM P/V/T MAX | 12.5 / 8 / 28 | 툴과 일치 |
+| DM P/V/T MAX | 12.5 / 10 / 28 | 모터 레지스터에서 읽은 값 (2026-11, VMAX 8 → 10) |
 | `DM_FB_TIMEOUT_MS` · `OD_HB_TIMEOUT_MS` | 30 · 300 | 확정 |
 | `OD_NODE_L / R` | 0 / 1 | 확정 |
 | `WHEEL_RADIUS_M` · `WHEEL_TORQUE_MAX` | 0.086 · 8.0 N·m | 확정 |

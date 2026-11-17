@@ -17,7 +17,7 @@
 | CAN_ID (ESC_ID) | 8 | `0x01` | `0x02` | 명령 프레임 ID |
 | Master ID | 7 | `0x11` | `0x12` | 피드백 프레임 ID |
 | Control Mode | 10 | 1 = MIT | 1 = MIT | |
-| PMAX / VMAX / TMAX | 21–23 | 12.5 / 8 / 28 | 12.5 / 8 / 28 | **펌웨어 `config.h` 와 반드시 같게** — 다르면 모든 값이 비례해서 틀어짐 |
+| PMAX / VMAX / TMAX | 21–23 | 12.5 / 10 / 28 | 12.5 / 10 / 28 | 받은 모터에서 읽은 값(2026-11). **펌웨어 `config.h` 와 반드시 같게** — 다르면 모든 값이 비례해서 틀어짐 |
 | CAN Timeout | 9 | 2000 | 2000 | 2000 × 50 µs = 100 ms 명령 없으면 모터 스스로 정지 |
 
 ## 순서
@@ -30,6 +30,9 @@
 5. **확인** — `dm_single_test` 에서 `e` → 피드백 state 1, 각도 0 근처
 
 ## 툴이 없을 때 — Teensy 에서 레지스터 쓰기 (ID `0x7FF`)
+
+실제로 쓰는 스케치: [`firmware/bringup/dm_config_tool`](../firmware/bringup/dm_config_tool/) — `s` 스캔, `L` 왼쪽, `R` 오른쪽, `t` Timeout. 순서는 [`firmware/bringup/README.md`](../firmware/bringup/README.md#2-dm_config_tool--좌--우-모터-id-설정).
+
 
 ```cpp
 tx(m.disable());
