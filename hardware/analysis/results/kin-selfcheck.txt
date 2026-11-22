@@ -1,0 +1,11 @@
+{'links': {'ground': 124.08464852672147, 'thigh': 239.10667075596197, 'coupler_KB': 64.98776807984716, 'rocker_AB': 211.310222185298}, 'grashof': True, 'shortest': 'coupler_KB', 'worst_close_mm': 6.355287432313019e-14, 'worst_len_mm': 5.684341886080802e-14, 'max_tau_diff': 1.021552528720008, 'mass_kg': 11.239488361919998}
+ -27.0 hip_h  552.8  wheel_y   89.0 knee  150.0 mu 175.6  tA None tB 3.082
+ -25.0 hip_h  545.9  wheel_y   44.0 knee  135.4 mu 157.2  tA 7.487 tB 7.490
+ -20.0 hip_h  523.4  wheel_y   15.8 knee  118.7 mu 137.2  tA 8.004 tB 8.004
+ -10.0 hip_h  475.3  wheel_y    3.4 knee   95.8 mu 111.1  tA 8.607 tB 8.607
+   0.0 hip_h  422.0  wheel_y    4.0 knee   76.3 mu  90.2  tA 9.59 tB 9.590
+  10.0 hip_h  361.4  wheel_y    5.6 knee   57.5 mu  70.9  tA 11.077 tB 11.077
+  20.0 hip_h  289.3  wheel_y    3.6 knee   37.7 mu  51.5  tA 13.797 tB 13.797
+  25.0 hip_h  245.7  wheel_y    0.4 knee   26.4 mu  41.1  tA 16.525 tB 16.524
+  30.0 hip_h  191.0  wheel_y   -3.9 knee   12.9 mu  29.2  tA 22.495 tB 22.492
+  36.0 hip_h   54.6  wheel_y    3.4 knee  -19.8 mu   3.9  tA None tB 169.298
