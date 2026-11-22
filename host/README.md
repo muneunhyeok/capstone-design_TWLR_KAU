@@ -9,6 +9,8 @@
 
 Teensy 펌웨어: [`../firmware/`](../firmware/)
 
+> **2026-11-22 실제 설정은 다름**: ODrive CAN 노드 **3 = 왼쪽(axis0), 4 = 오른쪽(axis1)**, 1 Mbps, **속도 모드**, 워치독 꺼짐. 상위 코드는 [`../twlr_balance/`](../twlr_balance/) (Khadas VIM4).
+
 ```
 현재 (3주차)
 BNO085 ──I²C──▶ Teensy 4.1 ──USB 시리얼 115200──▶ LattePanda (imu_serial_reader.py)

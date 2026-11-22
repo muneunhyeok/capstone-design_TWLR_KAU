@@ -13,7 +13,30 @@
 
 <sub>GIF 는 1.5~2 배속 미리보기입니다. 클릭하면 원본 mp4 로 이동합니다.</sub>
 
-> **최근 변경 (2026-10)**
+<table>
+<tr>
+<td width="30%" align="center"><a href="hardware/media/balancing-2026-11-22-floor.mp4"><img src="docs/readme/balancing.gif" width="220" alt="TWLR 실물 밸런싱"></a></td>
+<td>
+
+### ✅ 실물 밸런싱 성공 (2026-11-22)
+
+Teensy 4.1 하나가 **CAN 1 Mbps 한 줄**로 고관절 DM4340P ×2 + ODrive(인휠 ×2)를 묶고, BNO085 자세로
+**250 Hz 밸런싱 제어(속도 PI → 기울기 PD)** 를 직접 돌립니다. Khadas VIM4 는 키보드 명령 · 상태 표시 · CSV 로그만 맡습니다.
+
+- 코드: [`twlr_balance/`](twlr_balance/) · 실행 순서 · 확정 설정: [전장 04](docs/electronics/04-balancing-v3-teensy.md)
+- 영상: [바닥 밸런싱 20 s](hardware/media/balancing-2026-11-22-floor.mp4) · [시험 장면 63 s](hardware/media/balancing-2026-11-22-test.mp4)
+- 다음: 선회 → 스쿼트 → 롤 → ROS 2 브리지 — [전장 05 로드맵](docs/electronics/05-next-motions-roadmap.md)
+- ⚠️ **현재 실물 구동은 ROS 2 를 쓰지 않습니다** (아래 10월 계획과 다름 — 차이표는 [04 §1](docs/electronics/04-balancing-v3-teensy.md#1-지금-구조--ros-2-를-쓰지-않음))
+
+</td>
+</tr>
+</table>
+
+> **최근 변경 (2026-11)**
+> - **실물 밸런싱 성공 (11-22)** — 밸런싱 계산을 Teensy 로 옮긴 v3 코드 · 펌웨어, 실행 순서, 확정 설정값, 영상 2편 → [`twlr_balance/`](twlr_balance/) · [04](docs/electronics/04-balancing-v3-teensy.md)
+> - **스쿼트 · 롤 · 선회 · ROS 2 계획** — 높이별 힙 토크 · CoM 오프셋 표, 펌웨어 수정 지점, 시험 순서 → [05](docs/electronics/05-next-motions-roadmap.md)
+>
+> **2026-10**
 > - **고관절 체결부 실물 반영** — DM4340P 를 받침 · 반쪽 클램프로 몸통 포켓에 고정하는 구조로 출력 · 체결, 외형 치수(기본 자세 / 최대 신장) 정리 → [기구 설계 요약](#기구-설계-요약)
 > - **Gazebo 시뮬레이션 추가** — CATIA 기반 새 URDF(9.62 kg) + 균형 제어기 `sim/`, 검증 결과 · CAD(11.24 kg) 와의 차이 · 열린 항목 → [sim](sim/) · [시뮬레이션 문서](docs/simulation/)
 > - **2학기 통합본 발표 추가** — 1~3주차를 주제별로 재구성하고, CAN 통합 구동 계획 · 코드 원리 · 운용 방법을 새로 정리 → [발표](docs/presentations/2026-2-integrated/) · [전장 · 제어 문서](docs/electronics/)
@@ -26,7 +49,7 @@
 | | 내용 | 진입점 |
 |---|---|---|
 | **기구 설계 (CAD)** | CATIA, Fusion 360 어셈블리, 3D 프린팅 STL, 구조·정역학 해석 | **[`hardware/`](hardware/)** |
-| **전장 · 제어** | CAN 통합 구동 계획(DM4340P · ODrive · IMU → Teensy 500 Hz → ROS 2), 제어 원리, 운용 방법, 설정 스크립트 | [`docs/electronics/`](docs/electronics/) · [`firmware/`](firmware/) · [`host/`](host/) |
+| **전장 · 제어** | **실물 밸런싱 코드 v3** (Teensy 250 Hz + Khadas 파이썬), CAN 통합 구동 계획, 제어 원리, 운용 방법, 설정 스크립트 | [`twlr_balance/`](twlr_balance/) · [`docs/electronics/`](docs/electronics/) · [`firmware/`](firmware/) · [`host/`](host/) |
 | **ROS 2 · 시뮬레이션** | 새 URDF + Gazebo Harmonic 균형 시뮬레이션, 구버전 Fusion URDF | [`sim/`](sim/) · [`docs/simulation/`](docs/simulation/) · 구버전: [`urdf/`](urdf/) · [아래 섹션](#ros-2-robot-description) |
 
 ---
@@ -74,7 +97,10 @@
 
 ## 전장 · 제어 — CAN 통합 구동 계획
 
-**Teensy 4.1 이 CAN1(고관절) · CAN2(휠) · I²C(IMU)를 500 Hz 로 직접 돌리고, LattePanda 는 ROS 2 로 명령 · 기록만 맡습니다.**
+> **2026-11-22 실제 구현은 아래 10월 계획과 다릅니다** — CAN1 하나에 힙 + ODrive, ODrive 속도 모드, Teensy 250 Hz 밸런싱,
+> 상위는 ROS 2 가 아닌 파이썬 스크립트. → [04 실물 밸런싱 v3](docs/electronics/04-balancing-v3-teensy.md)
+
+**(10월 계획)** Teensy 4.1 이 CAN1(고관절) · CAN2(휠) · I²C(IMU)를 500 Hz 로 직접 돌리고, LattePanda 는 ROS 2 로 명령 · 기록만 맡습니다.
 상태: 휠 · IMU 단품 구동 확인 → 고관절 DM4340P 입고 후 bring-up 8단계 진행 예정 (2026-10 기준)
 
 | 항목 | 내용 |
@@ -88,6 +114,8 @@
 **문서** — [01 CAN 통합 구동 계획](docs/electronics/01-can-integration-plan.md) ·
 [02 코드 해설 · 원리 · 이론](docs/electronics/02-control-principles.md) ·
 [03 운용 방법](docs/electronics/03-operation-manual.md) ·
+[**04 실물 밸런싱 v3**](docs/electronics/04-balancing-v3-teensy.md) ·
+[**05 스쿼트 · 롤 · 선회 · ROS 2 계획**](docs/electronics/05-next-motions-roadmap.md) ·
 설정: [ODrive CAN](host/odrive_can_setup.odrivetool.py) · [DM4340P](host/dm4340p_setup.md)
 
 ## Gazebo 시뮬레이션
