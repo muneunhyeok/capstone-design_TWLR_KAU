@@ -6,7 +6,11 @@
 
 호스트 수신 코드: [`../host/imu_serial_reader.py`](../host/imu_serial_reader.py)
 
-## 다음 — 통합 펌웨어 (계획)
+## 통합 펌웨어 — 실제 구현 (2026-11-22)
+
+**[`../twlr_balance/firmware/twlr_bridge/`](../twlr_balance/firmware/twlr_bridge/)** — CAN1 하나에 DM4340P ×2 + ODrive, BNO085, 250 Hz 밸런싱. 실물 밸런싱 성공. 설명은 [`docs/electronics/04`](../docs/electronics/04-balancing-v3-teensy.md).
+
+## (10월) 통합 펌웨어 계획
 
 DM4340P(CAN1) · ODrive(CAN2) · BNO085(I²C)를 Teensy 하나에서 500 Hz 로 묶는 통합 펌웨어(`twlr_teensy/`)와
 단품 시험 스케치(`bringup/dm_single_test`, `bringup/odrive_can_test`)를 이 폴더에 추가할 예정입니다.
